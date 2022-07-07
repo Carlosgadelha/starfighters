@@ -1,8 +1,9 @@
 import {Request, Response} from "express"
 import axios from "axios";
-import { battleRepository } from "../repositories/battleRepository.js";
 
-async function getStargazersCount(userName: string): Promise<number> {
+import { resultBattle } from "../services/battleServices.js";
+
+export async function getStargazersCount(userName: string): Promise<number> {
 
     let soma = 0;
 
@@ -24,49 +25,10 @@ async function getStargazersCount(userName: string): Promise<number> {
 
 export async function newBattle(req: Request, res: Response) {
 
-    const { firstUser, secondUser } : { 
-                                        firstUser: string, 
-                                        secondUser: string 
-                                    } = req.body;
+    const { firstUser, secondUser } = res.locals;
 
-    let draw = false;
-    let winner = '0';
-    let loser = '0';
-    let firstUserStargazersCount = 0;
-    let secondUserStargazersCount = 0;
+    const result = await resultBattle(firstUser, secondUser);
 
-    try {
-        firstUserStargazersCount =   await getStargazersCount(firstUser);
-        secondUserStargazersCount =  await getStargazersCount(secondUser);
+    res.json(result);
 
-        console.log({firstUserStargazersCount, secondUserStargazersCount});
-        
-
-        if(firstUserStargazersCount === secondUserStargazersCount) {
-            draw = true;
-            battleRepository.newBattle(firstUser, 0, 0, 1);
-            battleRepository.newBattle(secondUser, 0, 0, 1);
-        }else{
-            winner = firstUserStargazersCount > secondUserStargazersCount ? firstUser : secondUser;
-            loser = firstUserStargazersCount > secondUserStargazersCount ? secondUser : firstUser;
-
-            battleRepository.newBattle(winner, 1, 0, 0);
-            battleRepository.newBattle(loser, 0, 1, 0);
-        }
-        
-
-        res.send(
-                {
-                    winner,
-                    loser,
-                    draw
-                }
-            );
-
-    } catch (error) {
-        console.error(error);
-    }
-
-    
-    
 }

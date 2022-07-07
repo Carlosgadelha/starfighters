@@ -14,7 +14,7 @@ async function updateWinner(username: string) {
 
 async function updateLoser(username: string) {
 
-    return database.query(`UPDATE fighters SET loser = loser + 1 WHERE username = $1`, [username]);
+    return database.query(`UPDATE fighters SET losses = losses + 1 WHERE username = $1`, [username]);
 
 }
 
