@@ -3,6 +3,12 @@ import axios from "axios";
 
 import { resultBattle } from "../services/battleServices.js";
 
+interface IBattleBody {
+    firstUser: string;
+    secondUser: string;
+ }
+
+
 export async function getStargazersCount(userName: string): Promise<number> {
 
     let soma = 0;

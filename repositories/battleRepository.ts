@@ -1,8 +1,15 @@
 import database from "../database.js";
 
+interface result{
+    username: string;
+    wins: number;
+    losses: number;
+    draw: number;
+}
+
 async function newBattle(username: string, winner: number, loser: number, draw: number) {
 
-    return database.query(`INSERT INTO fighters (username, wins, losses, draws) VALUES ($1, $2, $3, $4)`, [username, winner, loser, draw]);
+    return database.query<result>(`INSERT INTO fighters (username, wins, losses, draws) VALUES ($1, $2, $3, $4)`, [username, winner, loser, draw]);
 
 }
 
